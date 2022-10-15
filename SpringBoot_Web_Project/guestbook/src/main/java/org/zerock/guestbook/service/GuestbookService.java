@@ -8,8 +8,10 @@ import org.zerock.guestbook.entity.Guestbook;
 public interface GuestbookService {
 
     Long register(GuestbookDTO dto);
-
     PageResultDTO<GuestbookDTO, Guestbook> getList(PageRequestDTO requestDTO);
+    GuestbookDTO read(Long gno);
+    void remove(Long gno);
+    void modify(GuestbookDTO dto);
     
     // default 를 쓰면 impl에서  @Override 안하고 사용가능
     default Guestbook dtoToEntity(GuestbookDTO dto){ // 서비스 계층에서는 파라미터를 DTO 타입으로 받기 때문에 이를 JPA로 처리하기 위해서는 엔티티 타입의 객체로 변환해야 하는 작업이 반드시 필요함
