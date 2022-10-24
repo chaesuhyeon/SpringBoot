@@ -15,7 +15,6 @@ import org.zerock.board.dto.BoardDTO;
 import org.zerock.board.dto.PageRequestDTO;
 import org.zerock.board.service.BoardService;
 
-import javax.xml.soap.SAAJMetaFactory;
 
 @Controller
 @RequestMapping("/board/")
