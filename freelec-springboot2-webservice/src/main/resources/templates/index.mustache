@@ -4,6 +4,15 @@
     <div class="row">
         <div class="col-md-6">
             <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
+            {{#userName}} <!-- userName이 있다면 userName 노출 -->
+                Logged in as : <span id="user">{{userName}}</span>
+                    <a href="/logout" role="button" class="btn btn-info active">Logout</a> <!-- 스프링 시큐리티에서 기본저긍로 제공하는 로그아웃 URL -->
+            {{/userName}}
+
+            {{^userName}} <!-- 머스테치에서 해당 값이 존재하지 않는 경우에는 ^ 사용 --> <!-- userName이 없다면 로그인 버튼 노출 -->
+                <a href="/oauth2/authorization/google" role="button" class="btn btn-success active">Google Login</a> <!-- 스프링 시큐리티에서 기본적으로 제공하는 로그인 URL -->
+            {{/userName}}
+
         </div>
     </div>
 
