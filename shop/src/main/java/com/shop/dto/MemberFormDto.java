@@ -1,7 +1,6 @@
 package com.shop.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
@@ -10,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class MemberFormDto {
 
     @NotBlank(message = "이름은 필수 입력 값입니다.")
@@ -25,4 +25,12 @@ public class MemberFormDto {
 
     @NotEmpty(message = "주소는 필수 입력 값입니다.")
     private String address;
+
+    @Builder
+    public MemberFormDto(String name, String email, String password, String address) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+    }
 }
