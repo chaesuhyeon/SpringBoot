@@ -2,6 +2,7 @@ language: java
 jdk:
   -openjdk8
 
+#Travis CI를 어느브랜치가 푸시될 때 수행햘지 지정
 branches:
   only
   - master
