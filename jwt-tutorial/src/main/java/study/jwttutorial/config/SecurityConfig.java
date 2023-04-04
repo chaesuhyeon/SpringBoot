@@ -1,11 +1,22 @@
 package study.jwttutorial.config;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    public void configure(WebSecurity web){
+        web
+                .ignoring()
+                .antMatchers(
+                        "/h2-console/**" // h2-console 하위 모든 요청과
+                        ,"/favicon.ico" // 파비콘은 모두 무시하는 것으로 설정
+                );
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
