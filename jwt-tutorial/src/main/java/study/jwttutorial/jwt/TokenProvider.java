@@ -1,4 +1,4 @@
-package me.silvernine.tutorial.jwt;
+package study.jwttutorial.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
