@@ -6,3 +6,5 @@ services :
     hostname: test
     ports:
       - "6379:6379"
+    extra_hosts:
+      - host.docker.internal:host-gateway

@@ -2,14 +2,16 @@ spring :
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/redis
-    username: root
-    password: 1234
+    username: redis
+    password: redistest!
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.MariaDB103Dialect
   redis:
-    host: test
+#    host: test
+    host: host.docker.internal
     port: 6379
   cache:
     type: redis
