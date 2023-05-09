@@ -18,6 +18,11 @@ import javax.sql.DataSource;
 
 /**
  * CursorItemReader > JdbcCursorItemReader 구현
+ * CursorItemReader를 사용할 때는 Database와 SocketTime을 충분히 큰 값으로 설정해야한다.
+ *  Cursor는 하나의 Connection으로 Batch가 끝날 때까지 사용되기 때문에 Batch가 끝나기 전에 Database와 어플리케이션의 Connection이 먼저 끊어질 수 있음
+ *  그래서 Batch의 수행시간이 오래 걸리는 경우에는 PagingItemReader를 사용하는게 낫다.
+ *  Paging의 경우 한 페이지를 읽을 때 마다 Connection을 맺고 끊기 때문에 아무리 많은 데이터라도 타임아웃과 부하없이 수행할 수 있다.
+ *
  * <주의> : Jpa는 CursorItemReader가 없음
  */
 @Slf4j
