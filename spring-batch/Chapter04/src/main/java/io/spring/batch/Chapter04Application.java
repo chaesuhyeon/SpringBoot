@@ -1,9 +1,11 @@
 package io.spring.batch;
 
+import io.spring.batch.incrementer.DailyJobTimestamper;
 import io.spring.batch.validator.ParameterValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.job.CompositeJobParametersValidator;
 import org.springframework.batch.core.job.DefaultJobParametersValidator;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -40,6 +42,7 @@ public class Chapter04Application {
 	public CompositeJobParametersValidator validator(){
 		CompositeJobParametersValidator validator = new CompositeJobParametersValidator();
 
+		/*======== [DefaultJobParametersValidator]  ========*/
 		/* DefaultJobParametersValidator는 기본적으로 제공되는 파라미터 유효성 validator이다. */
 		/* requiredKeys와 optionalKeys 라는 선택전인 의존성 존재*/
 		/* 둘 다 문자열 배열로써 파라미터 이름 목록이 담김 */
@@ -47,7 +50,10 @@ public class Chapter04Application {
 		/* 옵션 키가 구성되어 있지 않고 필수키만 구성돼 있다면, 필수키를 전달하기만 하면 그 외 어떤 키의 조합을 전달 하더라도 유효성 검증을 통과 */
 		/* 필수키, 옵션키가 모두 구성되어 있을 경우 그 외 다른 파라미터 변수가 전달되면 유효성 검증을 실패 */
 		/* DefaultJobParametersValidator는 파라미터 존재 여부를 제외한 다른 유효성 검증을 수행하지 않음 -->  더 강력한 유효성 검증이 필요하다면  JobParametersValidator를 용도에 맞게 직접 구현해야 함*/
-		DefaultJobParametersValidator defaultJobParametersValidator = new DefaultJobParametersValidator(new String[]{"fileName"}, new String[]{"name"});
+		/* run.id : JobParametersIncrementer를 사용하기 위한 추가 파라미터 */
+
+//		DefaultJobParametersValidator defaultJobParametersValidator = new DefaultJobParametersValidator(new String[]{"fileName"}, new String[]{"name" , "run.id"}); // RunIdIncrementer 사용
+		DefaultJobParametersValidator defaultJobParametersValidator = new DefaultJobParametersValidator(new String[]{"fileName"}, new String[]{"name" , "currentDate"}); // DailyJobTimestamper 사용
 		defaultJobParametersValidator.afterPropertiesSet();
 
 		validator.setValidators(Arrays.asList(new ParameterValidator(), defaultJobParametersValidator));
@@ -59,6 +65,10 @@ public class Chapter04Application {
 		return this.jobBuilderFactory.get("basicJob")
 				.start(step1())
 				.validator(validator())
+				// Job은 동일한 파라미터로 수행했을 때 예외가 발생 -> JobParametersIncrementer: 사용해서 Job에서 사용할 파라미터를 고유하게 생성할 수 있도로록 스프링 배치가 제공하는 인터페이스
+				// 기본적으로 파라미터 이름이 run.id인 long 타입 파라미터의 값을 증가시킴
+//				.incrementer(new RunIdIncrementer())  // run.id 파라미터를 실행할 때 마다 1씩 증가시킨다.
+				.incrementer(new DailyJobTimestamper())  // 잡 실행 시마다 타임스탬프를 파라미터(currentDate)로 사용
 				.build();
 	}
 
