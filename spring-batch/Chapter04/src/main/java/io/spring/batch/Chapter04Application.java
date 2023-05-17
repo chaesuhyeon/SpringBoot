@@ -29,22 +29,24 @@ public class Chapter04Application {
 
 	private final StepBuilderFactory stepBuilderFactory;
 
-	@Bean
-	public Job job(){
-		return this.jobBuilderFactory.get("basicJob")
-				.start(step1())
-				.build();
-	}
-
 	/**
 	 *  JobBuilder의 메서드는 하나의 JobParameterValidator 인스턴스만 지정하게 되어 있음
 	 *  스프링 배치는 CompositeJobParametersValidator를 제공한다.
 	 *  CompositeJobParametersValidator를 사용하여 두 개 이상의 validator를 묶어서 사용할 수 있다.
+	 *
+	 *
 	 */
 	@Bean
 	public CompositeJobParametersValidator validator(){
 		CompositeJobParametersValidator validator = new CompositeJobParametersValidator();
 
+		/* DefaultJobParametersValidator는 기본적으로 제공되는 파라미터 유효성 validator이다. */
+		/* requiredKeys와 optionalKeys 라는 선택전인 의존성 존재*/
+		/* 둘 다 문자열 배열로써 파라미터 이름 목록이 담김 */
+		/* fileName은 필수키, name은 옵션키 */
+		/* 옵션 키가 구성되어 있지 않고 필수키만 구성돼 있다면, 필수키를 전달하기만 하면 그 외 어떤 키의 조합을 전달 하더라도 유효성 검증을 통과 */
+		/* 필수키, 옵션키가 모두 구성되어 있을 경우 그 외 다른 파라미터 변수가 전달되면 유효성 검증을 실패 */
+		/* DefaultJobParametersValidator는 파라미터 존재 여부를 제외한 다른 유효성 검증을 수행하지 않음 -->  더 강력한 유효성 검증이 필요하다면  JobParametersValidator를 용도에 맞게 직접 구현해야 함*/
 		DefaultJobParametersValidator defaultJobParametersValidator = new DefaultJobParametersValidator(new String[]{"fileName"}, new String[]{"name"});
 		defaultJobParametersValidator.afterPropertiesSet();
 
@@ -53,17 +55,29 @@ public class Chapter04Application {
 	}
 
 	@Bean
+	public Job job(){
+		return this.jobBuilderFactory.get("basicJob")
+				.start(step1())
+				.validator(validator())
+				.build();
+	}
+
+	@Bean
 	public Step step1(){
 		return this.stepBuilderFactory.get("step1")
-				.tasklet(helloWorldTasklet(null)).build();
+				.tasklet(helloWorldTasklet(null,null)).build();
 	}
 
 	@StepScope // 잡 파라미터를 늦은 바인딩하게 해줌 --> 스텝의 실행범위(StepScope) , 잡의 실행범위(JobScope)에 들어갈 때 까지 빈의 생성을 지연시키는 것 --> 이렇게 함으로써 명령행 또는 다른 소스에서 받아들인 잡 파라미터를 빈 생성 시점에 주입할 수 있음
 	@Bean
 	public Tasklet helloWorldTasklet(
-			@Value("#{jobParameters['name']}") String name){
+			@Value("#{jobParameters['name']}") String name,
+			@Value("#{jobParameters['fileName']}") String fileName
+
+	){
 		return (stepContribution, chunkContext) -> {
 			System.out.println(String.format("Hello, %s!" , name));
+			System.out.println(String.format("fileName = %s", fileName));
 
 			return RepeatStatus.FINISHED;
 		};
