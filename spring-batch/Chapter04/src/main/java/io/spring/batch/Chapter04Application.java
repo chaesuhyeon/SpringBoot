@@ -1,11 +1,13 @@
 package io.spring.batch;
 
 import io.spring.batch.incrementer.DailyJobTimestamper;
+import io.spring.batch.listener.JobLoggerListener;
 import io.spring.batch.validator.ParameterValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.job.CompositeJobParametersValidator;
 import org.springframework.batch.core.job.DefaultJobParametersValidator;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.listener.JobListenerFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -69,6 +71,8 @@ public class Chapter04Application {
 				// 기본적으로 파라미터 이름이 run.id인 long 타입 파라미터의 값을 증가시킴
 //				.incrementer(new RunIdIncrementer())  // run.id 파라미터를 실행할 때 마다 1씩 증가시킨다.
 				.incrementer(new DailyJobTimestamper())  // 잡 실행 시마다 타임스탬프를 파라미터(currentDate)로 사용
+				.listener(JobListenerFactoryBean.getListener(new JobLoggerListener())) // [@BeforeJob/@AfterJob 어노테이션 사용]
+//				.listener(new JobLoggerListener()) // [JobExecutionListener 인터페이스 직접 구현]잡 리스터 등록(잡 실행 전에 beforeJob, 잡 내의 처리가 완료되면 afterJob 메서드 호출)
 				.build();
 	}
 
