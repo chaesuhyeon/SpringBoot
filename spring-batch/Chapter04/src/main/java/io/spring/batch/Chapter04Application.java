@@ -63,9 +63,9 @@ public class Chapter04Application {
 	}
 
 	@Bean
-	public Job job(){
+	public Job basicJob(){
 		return this.jobBuilderFactory.get("basicJob")
-				.start(step1())
+				.start(basicStep1())
 				.validator(validator())
 				// Job은 동일한 파라미터로 수행했을 때 예외가 발생 -> JobParametersIncrementer: 사용해서 Job에서 사용할 파라미터를 고유하게 생성할 수 있도로록 스프링 배치가 제공하는 인터페이스
 				// 기본적으로 파라미터 이름이 run.id인 long 타입 파라미터의 값을 증가시킴
@@ -77,14 +77,14 @@ public class Chapter04Application {
 	}
 
 	@Bean
-	public Step step1(){
+	public Step basicStep1(){
 		return this.stepBuilderFactory.get("step1")
-				.tasklet(helloWorldTasklet(null,null)).build();
+				.tasklet(basicHelloWorldTasklet(null,null)).build();
 	}
 
 	@StepScope // 잡 파라미터를 늦은 바인딩하게 해줌 --> 스텝의 실행범위(StepScope) , 잡의 실행범위(JobScope)에 들어갈 때 까지 빈의 생성을 지연시키는 것 --> 이렇게 함으로써 명령행 또는 다른 소스에서 받아들인 잡 파라미터를 빈 생성 시점에 주입할 수 있음
 	@Bean
-	public Tasklet helloWorldTasklet(
+	public Tasklet basicHelloWorldTasklet(
 			@Value("#{jobParameters['name']}") String name,
 			@Value("#{jobParameters['fileName']}") String fileName
 
