@@ -5,3 +5,9 @@ spring:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true # 애플리케이션을 실행할 때 테이블을 생성하고 data.sql 파일에 있는 쿼리를 실행하는 옵션
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+  h2:
+    console:
+      enabled: true
