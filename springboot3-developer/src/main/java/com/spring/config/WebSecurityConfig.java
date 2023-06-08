@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -33,18 +34,19 @@ public class WebSecurityConfig {
     // 특정 HTTP 요청에 대한 웹 기반 보안 구성
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         return http
                 .authorizeRequests() // 인증, 인가 설정
-                .requestMatchers("/login", "/signup", "/user").permitAll() // 해당 url은 누구나 접근이 가능하며 인증/인가 없이도 접근할 수 있다.
-                .anyRequest().authenticated() // 나머지 url에 대해서는 인증이 필요하다.
+                    .requestMatchers("/login", "/signup", "/user").permitAll()
+                    .anyRequest().authenticated()
                 .and()
                 .formLogin() // 폼 기반 로그인 설정
-                .loginPage("/login") // 로그인 페이지 경로를 설정한다.
-                .defaultSuccessUrl("/articles") // 로그인이 완료되었을 때 이동할 경로를 설정한다.
+                    .loginPage("/login") // 로그인 페이지 경로를 설정한다.
+                    .defaultSuccessUrl("/articles") // 로그인이 완료되었을 때 이동할 경로를 설정한다.
                 .and()
                 .logout()// 로그아웃 설정
-                .logoutSuccessUrl("/login") // 로그아웃이 완료되었을 때 이동할 경로를 설정한다.
-                .invalidateHttpSession(true)// 로그아웃 이후에 세션을 전체 삭제할지 여부를 설정한다.
+                    .logoutSuccessUrl("/login") // 로그아웃이 완료되었을 때 이동할 경로를 설정한다.
+                    .invalidateHttpSession(true)// 로그아웃 이후에 세션을 전체 삭제할지 여부를 설정한다.
                 .and()
                 .csrf().disable() // csrf 비활성화 -> csrf 공격을 방지하기 위해서 활성화하는게 좋지만 실습을 편리하게 하기 위해 비활성화
                 .build();
