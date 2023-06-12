@@ -19,4 +19,9 @@ public class UserService {
                 .password(bCryptPasswordEncoder.encode(dto.getPassword())) // 패스워드를 저장할 때 시큐리티를 설정하며 패스워드 인코딩 용으로 등록한 빈을 사용해서 암호화한 후에 저장한ㄷ,
                 .build()).getId();
     }
+
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
+    }
 }
