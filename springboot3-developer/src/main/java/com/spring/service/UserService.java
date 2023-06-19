@@ -11,12 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Long save(AddUserRequest dto) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
         return userRepository.save(User.builder()
                 .email(dto.getEmail())
-                .password(bCryptPasswordEncoder.encode(dto.getPassword())) // 패스워드를 저장할 때 시큐리티를 설정하며 패스워드 인코딩 용으로 등록한 빈을 사용해서 암호화한 후에 저장한ㄷ,
+                .password(encoder.encode(dto.getPassword())) // 패스워드를 저장할 때 시큐리티를 설정하며 패스워드 인코딩 용으로 등록한 빈을 사용해서 암호화한 후에 저장한ㄷ,
                 .build()).getId();
     }
 
