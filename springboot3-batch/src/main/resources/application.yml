@@ -1,0 +1,43 @@
+spring:
+  profiles:
+    active: mariadb
+  batch:
+    jdbc:
+      initialize-schema: always
+
+---
+
+spring:
+  profiles:
+    active: local
+  datasource:
+    hikari:
+      jdbc-url: jdbc:h2:mem:db;MODE=MYSQL;
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+  batch:
+    job:
+      enabled: true
+
+---
+
+spring:
+  profiles:
+    active: mariadb
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mariadb://localhost:3306/BATCH
+      username: root
+      password: 1111
+      driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  batch:
+    job:
+      enabled: true
