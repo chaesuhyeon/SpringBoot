@@ -1,0 +1,5 @@
+rootProject.name = 'multi-module-example'
+include 'example-api-server'
+include 'example-batch-server'
+include 'example-core'
+
