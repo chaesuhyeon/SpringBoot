@@ -1,4 +1,4 @@
-rootProject.name = 'multi-module-example'
+rootProject.name = 'multi-module'
 include 'example-api-server'
 include 'example-batch-server'
 include 'example-core'
