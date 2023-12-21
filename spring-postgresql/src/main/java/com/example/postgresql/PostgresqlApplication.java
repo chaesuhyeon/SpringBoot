@@ -1,4 +1,4 @@
-package com.example.postgresql.postgresql;
+package com.example.postgresql;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
