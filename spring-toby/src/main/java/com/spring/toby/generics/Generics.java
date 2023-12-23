@@ -31,6 +31,21 @@ public class Generics {
     }
 
 
+    // 이 로직만 봤을 때 <T> (제네릭 메소드) 를 사용하는 것은 목적상 맞지 않는다.
+    // 내부 로직에서 실제로 T라는 타입을 사용하고 있지 않기 때문인데 이런 경우에는 isEmpty2 메소드처럼 wildcard를 사용하는 것이 좋다.
+    static <T> boolean isEmpty1(List<T> list) {
+        return list.size() == 0;
+    }
+
+    static <T> long frequency1(List<T> list, T elem) {
+        return list.stream().filter(s -> s.equals(elem)).count();
+    }
+
+    static <T extends Comparable<T>> T max1 (List<T> list) {
+        return list.stream().reduce((a, b) -> a.compareTo(b) > 0 ? a : b).get();
+    }
+
+
     // wildcard
     // ?에 어떤 타입이 와도 상관 없다.
     // List<?>는 List<Integer>의 상위 타입이다.
@@ -38,6 +53,17 @@ public class Generics {
         list.forEach(System.out::println);
     }
 
+    static boolean isEmpty2(List<?> list) { // List의 size 메소드는 타입과 상관없는 단순한 List의 메소드이기 때문에 <?> 이렇게 와일드 카드를 사용해도 무방
+        return list.size() == 0;
+    }
+
+    static long frequency2(List<?> list, Object elem) {
+        return list.stream().filter(s -> s.equals(elem)).count();
+    }
+
+    static <T extends Comparable<? super T>> T max2 (List<? extends T> list) {
+        return list.stream().reduce((a, b) -> a.compareTo(b) > 0 ? a : b).get();
+    }
 
     public static void main(String[] args) {
         Integer[] arr1 = new Integer[]{1, 2, 3, 4, 5};
@@ -49,5 +75,9 @@ public class Generics {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
 //        printList1(list); // 컴파일 에러. List<Object>는 List<Integer>의 상위 타입이 아니다.
         printList2(list);
+
+        System.out.println(isEmpty2(list));
+        System.out.println(frequency1(list, 3));
+        System.out.println(max1(list));
     }
 }
