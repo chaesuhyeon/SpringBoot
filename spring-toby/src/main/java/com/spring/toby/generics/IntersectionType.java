@@ -9,13 +9,15 @@ import java.util.function.Function;
  */
 public class IntersectionType {
 
-    interface Hello {
+    // Function을 extends해도 궁극적으로 Function의 apply method 1개를 가지고 있기 때문에 T extends Function & Hello & Hi이렇게 해도 apply method 하나로 간주하여 인터섹션 타입이 된다/
+    interface Hello extends Function {
         default void hello() {
             System.out.println("Hello");
         }
     }
 
-    interface Hi {
+    // Function을 extends해도 궁극적으로 Function의 apply method 1개를 가지고 있기 때문에 T extends Function & Hello & Hi이렇게 해도 apply method 하나로 간주하여 인터섹션 타입이 된다/
+    interface Hi extends Function{
         default void hi() {
             System.out.println("Hi");
         }
@@ -29,6 +31,7 @@ public class IntersectionType {
 
 
     // 인터섹션 타입을 이용해서 디폴트 메서드를 가진 인터페이스를 추가했더니 인터페이스 기능 + 디폴트 메서드의 기능을 다합쳐 사용할 수 있는 새로운 객체를 만들 수 있게 되었음
+    // Hello와 Hi가 Function을 extends하고 있기 때문에 Function의 apply 메서드를 가지고 있는데 각각 apply method를 가지고 있다고 해서 총 3개의 메서드를 가지고 있는게 아니라 모두 Function의 apply 메서드를 가지고 있기 때문에 궁극적으로 메서드 1개를 가지고 있다고 취급한다.
     private static <T extends Function & Hello & Hi> void hello(T t) {
 
         // 추가적으로 default 메서드를 사용할 수 있다.
