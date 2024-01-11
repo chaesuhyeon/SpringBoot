@@ -1,8 +1,10 @@
 package com.example.demo.service;
 
+import com.example.demo.exception.CertificationCodeNotMatchedException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.UserStatus;
 import com.example.demo.model.dto.UserCreateDto;
+import com.example.demo.model.dto.UserUpdateDto;
 import com.example.demo.repository.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -96,7 +98,60 @@ class UserServiceTest {
         // then
         assertThat(result.getId()).isNotNull();
         assertThat(result.getStatus()).isEqualTo(UserStatus.PENDING);
+//        assertThat(result.getCertificationCode()).isEqualTo("T,", "T"); //FIXME
     }
 
+    @Test
+    void userUpdateDto_를_이용하여_유저를_수정할_수_있다() {
+        // given
+        UserUpdateDto userUpdateDto = UserUpdateDto.builder()
+                .address("경기도2")
+                .nickname("홍길동2")
+                .build();
 
+        // when
+        UserEntity result = userService.update(1, userUpdateDto);
+
+        // then
+        UserEntity userEntity = userService.getById(1);
+
+        assertThat(userEntity).isNotNull();
+        assertThat(userEntity.getAddress()).isEqualTo("경기도2");
+        assertThat(result.getNickname()).isEqualTo("홍길동2");
+    }
+
+    @Test
+    void user를_로그인_시키면_마지막_로그인_시간이_변경된다() {
+        // given
+        // when
+        userService.login(1);
+
+        // then
+        UserEntity userEntity = userService.getById(1);
+        assertThat(userEntity.getLastLoginAt()).isGreaterThan(0L);
+//        assertThat(result.getLastLoginAt()).isEqualTo("T,", "T"); //FIXME
+    }
+
+    @Test
+    void PENDING_상태의_사용자는_인증_코드로_ACTIVE_시킬_수_있다() {
+        // given
+        // when
+        userService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab");
+
+        // then
+        UserEntity userEntity = userService.getById(2);
+        assertThat(userEntity.getStatus()).isEqualTo(UserStatus.ACTIVE);
+    }
+
+    @Test
+    void PENDING_상태의_사용자는_잘못된_인증_코드를_받으면_에러를_던진다() {
+        // given
+        // when
+        // then
+        assertThatThrownBy(() -> {
+            userService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaac");
+
+        }).isInstanceOf(CertificationCodeNotMatchedException.class);
+
+    }
 }
