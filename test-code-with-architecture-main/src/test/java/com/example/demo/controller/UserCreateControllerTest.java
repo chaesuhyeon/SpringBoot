@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.dto.UserCreateDto;
-import com.example.demo.model.dto.UserUpdateDto;
+import com.example.demo.user.domain.UserCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -37,7 +36,7 @@ public class UserCreateControllerTest {
     @Test
     void 사용자는_회원_가입을_할_수있고_회원가입된_사용자는_PENDING_상태이다() throws Exception {
         // given
-        UserCreateDto userCreateDto = UserCreateDto.builder()
+        UserCreate userCreate = UserCreate.builder()
                 .nickname("ddd81772")
                 .email("ddd8177@naver.com")
                 .address("Seoul1")
@@ -50,7 +49,7 @@ public class UserCreateControllerTest {
         mockMvc.perform(post("/api/users")
                         .header("EMAIL", "ddd8177@naver.com")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(userCreateDto)))
+                        .content(objectMapper.writeValueAsBytes(userCreate)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.nickname").value("ddd81772"))
