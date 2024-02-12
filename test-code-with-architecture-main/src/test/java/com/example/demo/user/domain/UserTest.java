@@ -1,14 +1,31 @@
 package com.example.demo.user.domain;
 
+import com.example.demo.mock.TestUuidHolder;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserTest {
 
     @Test
     public void UserCreate_객체로_생성할_수_있다() {
         // given
+        UserCreate userCreate = UserCreate.builder()
+                .email("test@test.com")
+                .nickname("test")
+                .address("Seoul")
+                .build();
+
         // when
+        User user = User.from(userCreate, new TestUuidHolder("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab"));
+
         // then
+        assertThat(user.getId()).isNull();
+        assertThat(user.getEmail()).isEqualTo("test@test.com");
+        assertThat(user.getNickname()).isEqualTo("test");
+        assertThat(user.getStatus()).isEqualTo(UserStatus.PENDING);
+        assertThat(user.getCertificationCode()).isEqualTo("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab");
+
     }
 
     @Test

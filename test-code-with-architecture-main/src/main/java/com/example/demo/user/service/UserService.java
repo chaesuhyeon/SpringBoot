@@ -2,6 +2,7 @@ package com.example.demo.user.service;
 
 import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
+import com.example.demo.common.service.port.UuidHolder;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.domain.UserCreate;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UuidHolder uuidHolder;
     private final CertificationService certificationService;
 
     public User getByEmail(String email) {
@@ -37,7 +39,7 @@ public class UserService {
 
     @Transactional
     public User create(UserCreate userCreate) {
-        User user = User.from(userCreate);
+        User user = User.from(userCreate, uuidHolder);
         user = userRepository.save(user);
         certificationService.send(user.getEmail(), user.getId(), user.getCertificationCode());
         return user;
