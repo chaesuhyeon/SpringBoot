@@ -31,8 +31,32 @@ public class UserTest {
     @Test
     public void UserUpdate_객체로_데이터를_업데이트_할_수_있다() {
         // given
+        User user = User.builder()
+                .id(1L)
+                .email("test@test.com")
+                .nickname("test")
+                .address("Seoul")
+                .status(UserStatus.ACTIVE)
+                .lastLoginAt(100L)
+                .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
+                .build();
+
+
+        UserUpdate userUpdate = UserUpdate.builder()
+                .nickname("test2")
+                .address("Busan")
+                .build();
+
         // when
+        user = user.update(userUpdate);
+
         // then
+        assertThat(user.getId()).isEqualTo(1L);
+        assertThat(user.getNickname()).isEqualTo("test2"); // 변경된 값
+        assertThat(user.getAddress()).isEqualTo("Busan");// 변경된 값
+        assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
+        assertThat(user.getCertificationCode()).isEqualTo("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab");
+        assertThat(user.getLastLoginAt()).isEqualTo(100L);
     }
 
     @Test
