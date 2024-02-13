@@ -1,5 +1,6 @@
 package com.example.demo.user.domain;
 
+import com.example.demo.mock.TestClockHolder;
 import com.example.demo.mock.TestUuidHolder;
 import org.junit.jupiter.api.Test;
 
@@ -62,8 +63,21 @@ public class UserTest {
     @Test
     public void 로그인을_할_수_있고_로그인시_마지막_로그인_시간이_변경된다() {
         // given
+        User user = User.builder()
+                .id(1L)
+                .email("test@test.com")
+                .nickname("test")
+                .address("Seoul")
+                .status(UserStatus.ACTIVE)
+                .lastLoginAt(100L)
+                .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
+                .build();
+
         // when
+        user = user.login(new TestClockHolder(16785L));
+
         // then
+        assertThat(user.getLastLoginAt()).isEqualTo(16785L);
     }
 
     @Test
