@@ -68,7 +68,4 @@ public class UserService {
         user = user.certificate(certificationCode);
         userRepository.save(user);
     }
-
-
-
 }

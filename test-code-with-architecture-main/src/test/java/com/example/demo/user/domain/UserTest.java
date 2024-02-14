@@ -1,10 +1,12 @@
 package com.example.demo.user.domain;
 
+import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
 import com.example.demo.mock.TestClockHolder;
 import com.example.demo.mock.TestUuidHolder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class UserTest {
 
@@ -83,14 +85,40 @@ public class UserTest {
     @Test
     public void 유효한_인증_코드로_계정을_활성화_할_수_있다() {
         // given
+        User user = User.builder()
+                .id(1L)
+                .email("test@test.com")
+                .nickname("test")
+                .address("Seoul")
+                .status(UserStatus.PENDING) // PENDING 상태
+                .lastLoginAt(100L)
+                .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
+                .build();
+
         // when
+        user = user.certificate("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab"); // 인증
+
         // then
+        assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE); // 인증 후 ACTIVE 상태
     }
 
     @Test
     public void 잘못된_인증_코드로_계정을_활성화_하려면_에러를_던진다() {
         // given
+        User user = User.builder()
+                .id(1L)
+                .email("test@test.com")
+                .nickname("test")
+                .address("Seoul")
+                .status(UserStatus.PENDING) // PENDING 상태
+                .lastLoginAt(100L)
+                .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
+                .build();
+
         // when
         // then
+        assertThatThrownBy(()-> {
+            user.certificate("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaac"); // 인증
+        }).isInstanceOf(CertificationCodeNotMatchedException.class);
     }
 }
