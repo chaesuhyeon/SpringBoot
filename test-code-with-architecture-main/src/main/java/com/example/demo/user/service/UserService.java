@@ -14,6 +14,7 @@ import java.time.Clock;
 import java.util.UUID;
 
 import com.example.demo.user.service.port.UserRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Builder
 @RequiredArgsConstructor
 public class UserService {
 
@@ -50,7 +52,7 @@ public class UserService {
     @Transactional
     public User update(long id, UserUpdate userUpdate) {
         User user = getById(id);
-        user.update(userUpdate);
+        user = user.update(userUpdate);
         user = userRepository.save(user);
         return user;
     }
