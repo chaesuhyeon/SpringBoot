@@ -11,7 +11,7 @@ class CertificationServiceTest {
     public void 이메일과_컨텐츠가_제대로_만들어져서_보내지는지_테스트한다() {
         // given
         FakeMailSender fakeMailSender = new FakeMailSender();
-        CertificationServiceImpl certificationService = new CertificationServiceImpl(fakeMailSender); // mailSender를 필요로한다. fake로 만든 mailSender를 넣어준다.
+        CertificationService certificationService = new CertificationService(fakeMailSender); // mailSender를 필요로한다. fake로 만든 mailSender를 넣어준다.
 
         // when
         certificationService.send("test@test.com", 1, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab");
