@@ -61,6 +61,7 @@ public class UserController {
     ) {
         User user = userReadService.getByEmail(email);
         authenticationService.login(user.getId());
+        user = userReadService.getByEmail(email); // 변경된 user 정보를 가져오기 위해 다시 조회
         return ResponseEntity
             .ok()
             .body(MyProfileResponse.from(user));
