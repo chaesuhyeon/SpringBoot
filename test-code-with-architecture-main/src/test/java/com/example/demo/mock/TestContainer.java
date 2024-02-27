@@ -6,6 +6,7 @@ import com.example.demo.post.controller.port.PostService;
 import com.example.demo.post.service.PostServiceImpl;
 import com.example.demo.post.service.port.PostRepository;
 import com.example.demo.user.controller.UserController;
+import com.example.demo.user.controller.UserCreateController;
 import com.example.demo.user.controller.port.*;
 import com.example.demo.user.service.CertificationService;
 import com.example.demo.user.service.UserServiceImpl;
@@ -24,6 +25,7 @@ public class TestContainer {
     public final PostService postService;
     public final CertificationService certificationService;
     public final UserController userController;
+    public final UserCreateController userCreateController;
 
 
     @Builder
@@ -51,6 +53,9 @@ public class TestContainer {
                 .userUpdateService(this.userUpdateService)
                 .userReadService(this.userReadService)
                 .authenticationService(this.authenticationService)
+                .build();
+        this.userCreateController = UserCreateController.builder()
+                .userCreateService(this.userCreateService)
                 .build();
     }
 }
