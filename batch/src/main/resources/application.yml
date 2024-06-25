@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/batch_db
+    username: tester
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  batch:
+    jdbc:
+      initialize-schema: always # 애플리케이션이 시작될 때 마다 배치 관련 테이블을 초기화한다.
+    job:
+      enabled: false # 애플리케이션이 시작될 때 배치 잡을 자동으로 실행하지 않는다.
+
+server:
+  port: 9090
